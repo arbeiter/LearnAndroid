@@ -1,5 +1,6 @@
 package com.nomnommer.arbeiter.nomnommer;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -12,6 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -60,28 +65,42 @@ public class PlaceNamesFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case R.id.action_refresh:
+                new GetPlacesTask().execute(101);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private class GetPlaces extends AsyncTask<Void, Void, Void> {
-        private final String LOG_TAG = GetPlaces.class.getSimpleName();
+    private class GetPlacesTask extends AsyncTask<Integer, Void, Void> {
+        private final String LOG_TAG = GetPlacesTask.class.getSimpleName();
 
         @Override
-        protected Void doInBackground(Void... urls) {
+        protected Void doInBackground(Integer... urls) {
+            Log.d(LOG_TAG, "doInBackground Invoked with param"+urls[0]);
+
             //Try out http requests
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
             //Result string
-
             String forecastJsonStr = null;
             try {
-                String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7";
-                String apiKey = "&APPID=0b56807a9fe0bcf6c79681caa394658c";
-                URL url = new URL(baseUrl.concat(apiKey));
+
+                Uri.Builder builder = new Uri.Builder();
+                builder.scheme("http")
+                        .authority("api.openweathermap.org")
+                        .appendPath("data")
+                        .appendPath("2.5")
+                        .appendPath("forecast")
+                        .appendPath("daily")
+                        .appendQueryParameter("q","94043")
+                        .appendQueryParameter("mode","json")
+                        .appendQueryParameter("units","metric")
+                        .appendQueryParameter("cnt","7")
+                        .appendQueryParameter("APPID", "0b56807a9fe0bcf6c79681caa394658c");
+
+                URL url = new URL(builder.toString());
 
                 //Create a get request and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -107,8 +126,11 @@ public class PlaceNamesFragment extends Fragment {
                 }
 
                 forecastJsonStr = buffer.toString();
+                //Get result for the first day
+                int max = getMaxTemp(forecastJsonStr, 0);
             } catch (Exception e) {
-                Log.e(LOG_TAG, "Error ", e);
+                Log.d(LOG_TAG, "exception in here");
+                Log.e(LOG_TAG, "Generic exception here", e);
                 return null;
             } finally {
                 if (urlConnection != null) {
@@ -124,5 +146,16 @@ public class PlaceNamesFragment extends Fragment {
             }
             return null;
         }
+    }
+
+    private int getMaxTemp(String forecastJsonStr, int dayIndex) throws JSONException {
+        String val = Integer.toString(dayIndex);
+        JSONObject mainObject = new JSONObject(forecastJsonStr);
+        JSONArray list = new JSONObject(forecastJsonStr).getJSONArray("list");
+
+        JSONObject listObject = (JSONObject)list.get(dayIndex);
+        JSONObject tempObject = listObject.getJSONObject("temp");
+        int max = tempObject.getInt("max");
+        return max;
     }
 }
