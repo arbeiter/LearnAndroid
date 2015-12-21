@@ -31,6 +31,8 @@ import java.util.Arrays;
  * A placeholder fragment containing a simple view.
  */
 public class PlaceNamesFragment extends Fragment {
+    ArrayList<String> outputList = new ArrayList<String>();
+    ArrayAdapter<String> arrayAdapter;
 
     public PlaceNamesFragment() {
     }
@@ -45,7 +47,6 @@ public class PlaceNamesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        ArrayList<String> outputList = new ArrayList<String>();
         outputList = new ArrayList<String>(Arrays.asList("Qdoba", "McDonalds", "Burga King"));
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.fetched_item_display, R.id.fetched_item_text_view, outputList);
 
@@ -72,12 +73,12 @@ public class PlaceNamesFragment extends Fragment {
         }
     }
 
-    private class GetPlacesTask extends AsyncTask<Integer, Void, Void> {
+    private class GetPlacesTask extends AsyncTask<Integer, String, String[]> {
         private final String LOG_TAG = GetPlacesTask.class.getSimpleName();
 
         @Override
-        protected Void doInBackground(Integer... urls) {
-            Log.d(LOG_TAG, "doInBackground Invoked with param"+urls[0]);
+        protected String[] doInBackground(Integer... urls) {
+            Log.d(LOG_TAG, "doInBackground Invoked with param" + urls[0]);
 
             //Try out http requests
             HttpURLConnection urlConnection = null;
@@ -127,7 +128,9 @@ public class PlaceNamesFragment extends Fragment {
 
                 forecastJsonStr = buffer.toString();
                 //Get result for the first day
-                int max = getMaxTemp(forecastJsonStr, 0);
+                //int max = getMaxTemp(forecastJsonStr, 0);
+                String[] arr = new String[10];
+                return arr;
             } catch (Exception e) {
                 Log.d(LOG_TAG, "exception in here");
                 Log.e(LOG_TAG, "Generic exception here", e);
@@ -144,7 +147,15 @@ public class PlaceNamesFragment extends Fragment {
                     }
                 }
             }
-            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String[] s) {
+            super.onPostExecute(s);
+            arrayAdapter.clear();
+            for (String datum:s) {
+                arrayAdapter.add(datum);
+            }
         }
     }
 
