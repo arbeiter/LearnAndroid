@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.nomnommer.arbeiter.nomnommer.YelpApiHandler.YelpApi;
+import com.nomnommer.arbeiter.nomnommer.YelpApiHandler.YelpParser.ParseHandler;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +34,13 @@ import java.util.Arrays;
  * A placeholder fragment containing a simple view.
  */
 public class PlaceNamesFragment extends Fragment {
+
+    //Move to a separate constants class
+    private static final String CONSUMER_KEY = "vt69-7nz0OaKtpCng18x8g";
+    private static final String CONSUMER_SECRET = "mrOpQ1YV-Zblqiag-mdTH54u3Vo";
+    private static final String TOKEN = "yXyEzTQ32dl1jAww3JNiGuIRFVGuJVf1";
+    private static final String TOKEN_SECRET = "uwFDFWa2Itesy0A-e-pa3ZvFeK8";
+
     ArrayList<String> outputList = new ArrayList<String>();
     ArrayAdapter<String> arrayAdapter;
 
@@ -80,73 +90,14 @@ public class PlaceNamesFragment extends Fragment {
         protected String[] doInBackground(Integer... urls) {
             Log.d(LOG_TAG, "doInBackground Invoked with param" + urls[0]);
 
-            //Try out http requests
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
-
-            //Result string
-            String forecastJsonStr = null;
-            try {
-
-                Uri.Builder builder = new Uri.Builder();
-                builder.scheme("http")
-                        .authority("api.openweathermap.org")
-                        .appendPath("data")
-                        .appendPath("2.5")
-                        .appendPath("forecast")
-                        .appendPath("daily")
-                        .appendQueryParameter("q","94043")
-                        .appendQueryParameter("mode","json")
-                        .appendQueryParameter("units","metric")
-                        .appendQueryParameter("cnt","7")
-                        .appendQueryParameter("APPID", "0b56807a9fe0bcf6c79681caa394658c");
-
-                URL url = new URL(builder.toString());
-
-                //Create a get request and open the connection
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                //Read input stream to string
-                InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
-                if (inputStream == null) {
-                    return null;
-                }
-
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line + "\n");
-                }
-
-                if (buffer.length() == 0) {
-                    return null;
-                }
-
-                forecastJsonStr = buffer.toString();
-                //Get result for the first day
-                //int max = getMaxTemp(forecastJsonStr, 0);
-                String[] arr = new String[10];
-                return arr;
-            } catch (Exception e) {
-                Log.d(LOG_TAG, "exception in here");
-                Log.e(LOG_TAG, "Generic exception here", e);
-                return null;
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (final IOException e) {
-                        Log.e(LOG_TAG, "Error closing stream", e);
-                    }
-                }
+            YelpApi requestYelpHelper = new YelpApi(CONSUMER_KEY, CONSUMER_SECRET, TOKEN, TOKEN_SECRET);
+            String response = requestYelpHelper.searchForBusinessesByLocation("food", "San Francisco", 3);
+            if(response!=null){
+                response = response.concat("y");
             }
+            ParseHandler handler = new ParseHandler();
+            String[] responseObjects = handler.getBusinessDataFromJson(response);
+            return responseObjects;
         }
 
         @Override

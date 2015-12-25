@@ -12,7 +12,7 @@ import java.util.List;
  * Created by GMan on 12/22/15.
  */
 public class ParseHandler {
-    private String[] getBusinessDataFromJson(String jsonStr){
+    public String[] getBusinessDataFromJson(String jsonStr){
         //Esta codigo puedo o puedo que no funcionar segun mi plano. Pero ahora, esta es suficiente
         //Manana, fijare todos ;)
         //Segun mi plano, ya sea este o la adapter del tipos(TypeAdapter) puedan funcionar

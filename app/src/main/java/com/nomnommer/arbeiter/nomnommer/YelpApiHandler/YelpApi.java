@@ -1,5 +1,7 @@
 package com.nomnommer.arbeiter.nomnommer.YelpApiHandler;
 
+import com.nomnommer.arbeiter.nomnommer.YelpApiHandler.YelpParser.OAuth.TwoStepOAuth;
+
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.DefaultApi10a;
 import org.scribe.model.OAuthRequest;
@@ -92,25 +94,5 @@ public class YelpApi {
     private OAuthRequest createOAuthRequest(String path) {
         OAuthRequest request = new OAuthRequest(Verb.GET, "https://" + API_HOST + path);
         return request;
-    }
-
-    /**
-     * What's this for? To get the build to pass.
-     */
-    class TwoStepOAuth extends DefaultApi10a {
-        @Override
-        public String getAccessTokenEndpoint() {
-            return null;
-        }
-
-        @Override
-        public String getAuthorizationUrl(Token arg0) {
-            return null;
-        }
-
-        @Override
-        public String getRequestTokenEndpoint() {
-            return null;
-        }
     }
 }
