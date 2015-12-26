@@ -92,11 +92,23 @@ public class PlaceNamesFragment extends Fragment {
 
             YelpApi requestYelpHelper = new YelpApi(CONSUMER_KEY, CONSUMER_SECRET, TOKEN, TOKEN_SECRET);
             String response = requestYelpHelper.searchForBusinessesByLocation("food", "San Francisco", 3);
-            if(response!=null){
+            if(response!=null)
+            {
                 response = response.concat("y");
             }
+
             ParseHandler handler = new ParseHandler();
-            String[] responseObjects = handler.getBusinessDataFromJson(response);
+            String[] responseObjects = new String[0];
+
+            try
+            {
+                responseObjects = handler.getBusinessDataFromJson(response);
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
             return responseObjects;
         }
 
@@ -110,14 +122,5 @@ public class PlaceNamesFragment extends Fragment {
         }
     }
 
-    private int getMaxTemp(String forecastJsonStr, int dayIndex) throws JSONException {
-        String val = Integer.toString(dayIndex);
-        JSONObject mainObject = new JSONObject(forecastJsonStr);
-        JSONArray list = new JSONObject(forecastJsonStr).getJSONArray("list");
 
-        JSONObject listObject = (JSONObject)list.get(dayIndex);
-        JSONObject tempObject = listObject.getJSONObject("temp");
-        int max = tempObject.getInt("max");
-        return max;
-    }
 }
