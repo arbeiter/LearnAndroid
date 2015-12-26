@@ -37,6 +37,11 @@ public class ParseHandler {
             // public String address;
             nomObj.name = business.get("name").toString();
             nomObj.snippet_image_url = business.get("snippet_image_url").toString();
+            JSONArray categoryArray = business.getJSONArray("categories");
+            List<String> categoryList = new ArrayList<String>();
+            for(int j = 0; j<categoryArray.length();j++){
+                categoryList.add(categoryArray.getString(j));
+            }
             nomList.add(nomObj);
         }
 
