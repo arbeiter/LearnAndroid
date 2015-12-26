@@ -58,7 +58,7 @@ public class PlaceNamesFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         outputList = new ArrayList<String>(Arrays.asList("Qdoba", "McDonalds", "Burga King"));
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.fetched_item_display, R.id.fetched_item_text_view, outputList);
+        arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.fetched_item_display, R.id.fetched_item_text_view, outputList);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ListView listView = (ListView)rootView.findViewById(R.id.list_view_fetchedItems);
@@ -88,21 +88,27 @@ public class PlaceNamesFragment extends Fragment {
 
         @Override
         protected String[] doInBackground(Integer... urls) {
+
             Log.d(LOG_TAG, "doInBackground Invoked with param" + urls[0]);
 
             YelpApi requestYelpHelper = new YelpApi(CONSUMER_KEY, CONSUMER_SECRET, TOKEN, TOKEN_SECRET);
-            String response = requestYelpHelper.searchForBusinessesByLocation("food", "San Francisco", 3);
-            if(response!=null)
-            {
-                response = response.concat("y");
-            }
+            String response = requestYelpHelper.searchForBusinessesByLocation("food", "San Francisco", 20);
 
             ParseHandler handler = new ParseHandler();
-            String[] responseObjects = new String[0];
+            String[] responseObjects = new String[20];
 
             try
             {
                 responseObjects = handler.getBusinessDataFromJson(response);
+                /*
+                *
+                *
+                *  for(int i=0;i<responseObjects.length;i  ++){
+                    arrayAdapter.add(responseObjects[i]);
+                }
+                *
+                * */
+
             }
             catch (JSONException e)
             {

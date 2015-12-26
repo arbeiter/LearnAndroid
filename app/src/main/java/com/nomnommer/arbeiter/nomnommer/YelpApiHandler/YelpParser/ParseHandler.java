@@ -27,6 +27,8 @@ public class ParseHandler {
         Gson gson = new Gson();
         JSONArray jsonArray = new JSONObject(jsonStr).getJSONArray("businesses");
 
+        String[] debugArr = new String[20];
+
         List<Nom> nomList = new ArrayList<Nom>();
         for(int i=0;i<jsonArray.length();i++){
             Nom nomObj = new Nom();
@@ -37,18 +39,19 @@ public class ParseHandler {
             // public String address;
             nomObj.name = business.get("name").toString();
             nomObj.snippet_image_url = business.get("snippet_image_url").toString();
-            JSONArray categoryArray = business.getJSONArray("categories");
-            List<String> categoryList = new ArrayList<String>();
-            for(int j = 0; j<categoryArray.length();j++){
-                categoryList.add(categoryArray.getString(j));
-            }
+           // JSONArray categoryArray = business.getJSONArray("categories");
+           // List<String> categoryList = new ArrayList<String>();
+           // for(int j = 0; j<categoryArray.length();j++){
+             //   categoryList.add(categoryArray.getString(j));
+           // }
             nomList.add(nomObj);
+            debugArr[i] = nomObj.name;
         }
 
         //Esta es el plano
         //Primeramente, obtener su data en la forma de arrays del objetos
         //A estos efetos, analizar granalicamente sus datos a un objeto que se ha definido antes
-        return new String[10];
+        return debugArr;
     }
 
     /*
