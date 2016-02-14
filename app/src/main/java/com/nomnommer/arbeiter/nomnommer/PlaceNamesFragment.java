@@ -1,5 +1,7 @@
 package com.nomnommer.arbeiter.nomnommer;
 
+import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
@@ -11,9 +13,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.nomnommer.arbeiter.nomnommer.Models.Models.Noms.Nom;
 import com.nomnommer.arbeiter.nomnommer.YelpApiHandler.YelpApi;
 import com.nomnommer.arbeiter.nomnommer.YelpApiHandler.YelpParser.ParseHandler;
 
@@ -55,14 +60,28 @@ public class PlaceNamesFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        outputList = new ArrayList<String>(Arrays.asList("Qdoba", "McDonalds", "Burga King"));
+                             Bundle savedInstanceState)
+    {
+        outputList = new ArrayList<String>(Arrays.asList("Nada"));
         arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.fetched_item_display, R.id.fetched_item_text_view, outputList);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ListView listView = (ListView)rootView.findViewById(R.id.list_view_fetchedItems);
         listView.setAdapter(arrayAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Nom elem = (Nom) parent.getItemAtPosition(position);
+                CharSequence description = elem.name + " is your place, man";
+                //El experimento con las tostadas
+                Toast toast;
+                toast = new Toast(getContext());
+                toast.setText(description);
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
 
         return rootView;
     }
