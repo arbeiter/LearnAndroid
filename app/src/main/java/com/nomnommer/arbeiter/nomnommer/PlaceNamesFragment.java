@@ -72,17 +72,13 @@ public class PlaceNamesFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Nom elem = (Nom) parent.getItemAtPosition(position);
-                CharSequence description = elem.name + " is your place, man";
+                Object obj = parent.getItemAtPosition(position);
+                CharSequence description = obj.toString() + " is your place, man";
                 //El experimento con las tostadas
-                Toast toast;
-                toast = new Toast(getContext());
-                toast.setText(description);
-                toast.setDuration(Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getContext(), description, Toast.LENGTH_SHORT);
                 toast.show();
             }
         });
-
         return rootView;
     }
 
@@ -119,15 +115,6 @@ public class PlaceNamesFragment extends Fragment {
             try
             {
                 responseObjects = handler.getBusinessDataFromJson(response);
-                /*
-                *
-                *
-                *  for(int i=0;i<responseObjects.length;i  ++){
-                    arrayAdapter.add(responseObjects[i]);
-                }
-                *
-                * */
-
             }
             catch (JSONException e)
             {
