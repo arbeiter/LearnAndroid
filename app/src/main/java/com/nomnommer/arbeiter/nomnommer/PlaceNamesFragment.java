@@ -2,6 +2,7 @@ package com.nomnommer.arbeiter.nomnommer;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
@@ -74,9 +75,10 @@ public class PlaceNamesFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object obj = parent.getItemAtPosition(position);
                 CharSequence description = obj.toString() + " is your place, man";
-                //El experimento con las tostadas
-                Toast toast = Toast.makeText(getContext(), description, Toast.LENGTH_SHORT);
-                toast.show();
+
+                //Anadir la intencion
+                Intent intent = new Intent(getActivity(), NomDetailActivity.class).putExtra(Intent.EXTRA_TEXT, description);
+                startActivity(intent);
             }
         });
         return rootView;
