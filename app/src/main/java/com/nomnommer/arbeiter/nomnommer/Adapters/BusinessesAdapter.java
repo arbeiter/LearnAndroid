@@ -1,4 +1,4 @@
-package com.nomnommer.arbeiter.nomnommer.YelpApiHandler.YelpParser.Adapters;
+package com.nomnommer.arbeiter.nomnommer.Adapters;
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

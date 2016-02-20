@@ -100,7 +100,8 @@ public class PlaceNamesFragment extends Fragment {
         }
     }
 
-    private class GetPlacesTask extends AsyncTask<Integer, String, String[]> {
+    private class GetPlacesTask extends AsyncTask<Integer, String, String[]>
+    {
         private final String LOG_TAG = GetPlacesTask.class.getSimpleName();
 
         @Override
@@ -135,6 +136,4 @@ public class PlaceNamesFragment extends Fragment {
             }
         }
     }
-
-
 }
