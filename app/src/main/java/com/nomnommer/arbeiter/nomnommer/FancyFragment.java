@@ -31,6 +31,8 @@ public class FancyFragment extends Fragment{
 
     ArrayList<Nom> outputList = new ArrayList<Nom>();
     FancyAdapter fancyArrayAdapter;
+    View rootView;
+    ListView listView;
 
     public FancyFragment() {
     }
@@ -48,11 +50,12 @@ public class FancyFragment extends Fragment{
                              Bundle savedInstanceState)
     {
         ArrayList<Nom> outputList = new ArrayList<Nom>();
-        fancyArrayAdapter = new FancyAdapter(getActivity().getBaseContext(), outputList);
+        fancyArrayAdapter = new FancyAdapter(getActivity(), outputList);
 
-        View rootView = inflater.inflate(R.layout.fragment_fancy, container, false);
-        ListView listView = (ListView)rootView.findViewById(R.id.list_view_fetchedItems);
+        rootView = inflater.inflate(R.layout.fragment_fancy, container, false);
+        listView = (ListView)rootView.findViewById(R.id.fancy_fetched_items);
         listView.setAdapter(fancyArrayAdapter);
+
         return rootView;
     }
 
@@ -64,6 +67,14 @@ public class FancyFragment extends Fragment{
 
         @Override
         protected List<Nom> doInBackground(Integer... urls) {
+
+            Nom nom = new Nom();
+            nom.snippet_image_url =  "http://ycombinator.com/images/yc500.gif";
+            nom.name = "Sup";
+            List<Nom> lol = new ArrayList<Nom>();
+            lol.add(nom);
+            fancyArrayAdapter = new FancyAdapter(getActivity(), lol);
+
 
             Log.d(LOG_TAG, "doInBackground Invoked with param" + urls[0]);
 
@@ -88,7 +99,8 @@ public class FancyFragment extends Fragment{
         @Override
         protected void onPostExecute(List<Nom> noms) {
             super.onPostExecute(noms);
-            fancyArrayAdapter = new FancyAdapter(getActivity().getBaseContext(), noms);
+            fancyArrayAdapter = new FancyAdapter(getActivity(), noms);
+            listView.setAdapter(fancyArrayAdapter);
         }
     }
 }

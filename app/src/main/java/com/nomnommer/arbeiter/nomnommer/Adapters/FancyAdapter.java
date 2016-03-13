@@ -28,7 +28,6 @@ public class FancyAdapter extends BaseAdapter{
         nomList = list;
     }
 
-
     @Override
     public int getCount()
     {
@@ -58,7 +57,7 @@ public class FancyAdapter extends BaseAdapter{
 
         //Get image bitmap
         ImageView icon = (ImageView)convertView.findViewById(R.id.placePicture);
-        icon.setImageBitmap(entry.getPicture());
+        icon.setImageBitmap(entry.photo);
         //set image
 
         TextView text = (TextView)convertView.findViewById(R.id.placeText);
