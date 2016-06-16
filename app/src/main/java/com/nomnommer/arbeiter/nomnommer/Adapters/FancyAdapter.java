@@ -17,7 +17,8 @@ import java.util.List;
 /**
  * Created by chowman on 2/19/16.
  */
-public class FancyAdapter extends BaseAdapter{
+public class FancyAdapter extends BaseAdapter
+{
 
     private Context mContext;
     private List<Nom> nomList;

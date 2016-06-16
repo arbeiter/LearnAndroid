@@ -20,8 +20,6 @@ import java.util.List;
 public class Nom
 {
         public String name;
-        public List<String> categories = new ArrayList<String>();
         public String snippet_image_url;
-        public String address;
         public Bitmap photo;
 }
