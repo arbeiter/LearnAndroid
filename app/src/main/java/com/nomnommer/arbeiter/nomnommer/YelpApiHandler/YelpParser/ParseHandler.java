@@ -1,17 +1,21 @@
 package com.nomnommer.arbeiter.nomnommer.YelpApiHandler.YelpParser;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.nomnommer.arbeiter.nomnommer.Models.Models.Noms.Nom;
-import com.nomnommer.arbeiter.nomnommer.YelpApiHandler.YelpParser.Adapters.BusinessesAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,13 +24,7 @@ import java.util.List;
 public class ParseHandler {
 
     public String[] getBusinessDataFromJson(String jsonStr) throws JSONException {
-
-        //Esta codigo puedo o puedo que no funcionar segun mi plano. Pero ahora, esta es suficiente
-        //Manana, fijare todos ;)
-        //Segun mi plano, ya sea este o la adapter del tipos(TypeAdapter) puedan funcionar
-        Gson gson = new Gson();
         JSONArray jsonArray = new JSONObject(jsonStr).getJSONArray("businesses");
-
         String[] debugArr = new String[20];
 
         List<Nom> nomList = new ArrayList<Nom>();
@@ -53,6 +51,53 @@ public class ParseHandler {
         //A estos efetos, analizar granalicamente sus datos a un objeto que se ha definido antes
         return debugArr;
     }
+
+    public List<Nom> GetNoms(String jsonStr) throws JSONException
+    {
+        JSONArray jsonArray = new JSONObject(jsonStr).getJSONArray("businesses");
+
+        List<Nom> nomList = new ArrayList<Nom>();
+        for(int i=0;i<jsonArray.length();i++){
+            Nom nomObj = new Nom();
+            JSONObject business = jsonArray.getJSONObject(i);
+            //public String name;
+            //public List<String> categories = new ArrayList<String>();
+            //public String snippet_image_url;
+            // public String address;
+            nomObj.name = business.get("name").toString();
+            nomObj.snippet_image_url = business.get("snippet_image_url").toString();
+            nomObj.photo = new GetImageTask().doInBackground(nomObj.snippet_image_url);
+            nomList.add(nomObj);
+        }
+
+        //Esta es el plano
+        //Primeramente, obtener su data en la forma de arrays del objetos
+        //A estos efetos, analizar granalicamente sus datos a un objeto que se ha definido antes
+        return nomList;
+    }
+
+    private class GetImageTask extends AsyncTask<String, Void, Bitmap>
+    {
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            try {
+                URL url = new URL(params[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                return myBitmap;
+            }
+            catch(MalformedURLException ex) {
+                return null;
+            }
+            catch(IOException ex) {
+                return null;
+            }
+        }
+    }
+
 
     /*
     private int getMaxTemp(String forecastJsonStr, int dayIndex) throws JSONException {
